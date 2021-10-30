@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  # -----------------------
+  # - application container
+  # -----------------------
+  app:
+    image: ghcr.io/nazarhanov/alpha:latest
+    env_file: .env.app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # -----------------------
+  # - database container
+  # -----------------------
+  db:
+    image: mysql:5.7
+    env_file: .env.db
+    volumes:
+      - ./data:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 1s
+      timeout: 20s
+      retries: 12
+
+  # -----------------------
+  # - watch container
+  # -----------------------
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /$HOME/.docker/config.json:/config.json
+    command: --interval 30
