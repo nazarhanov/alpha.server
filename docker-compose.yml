@@ -7,6 +7,10 @@ services:
   app:
     image: ghcr.io/nazarhanov/alpha:latest
     env_file: .env.app
+    command: >
+      sh -c "python3 manage.py collectstatic --noinput --link &&
+             python3 manage.py migrate &&
+             python3 manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     depends_on:
