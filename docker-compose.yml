@@ -2,17 +2,25 @@ version: "3"
 
 services:
   # -----------------------
+  # - web container
+  # -----------------------
+  web:
+    build: ./web
+    volumes:
+      - ./static:/app/static
+    ports:
+      - "8000:80"
+    depends_on:
+      - app
+
+  # -----------------------
   # - application container
   # -----------------------
   app:
-    image: ghcr.io/nazarhanov/alpha:latest
-    env_file: .env.app
-    command: >
-      sh -c "python3 manage.py collectstatic --noinput &&
-             python3 manage.py migrate &&
-             python3 manage.py runserver 0.0.0.0:8000"
-    ports:
-      - "8000:8000"
+    build: ./app
+    env_file: ./app/.env.app
+    volumes:
+      - ./static:/app/static
     depends_on:
       db:
         condition: service_healthy
@@ -21,8 +29,8 @@ services:
   # - database container
   # -----------------------
   db:
-    image: mysql:5.7
-    env_file: .env.db
+    build: ./db
+    env_file: ./db/.env.db
     volumes:
       - ./data:/var/lib/mysql
     healthcheck:

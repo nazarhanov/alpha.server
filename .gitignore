@@ -1,3 +1,4 @@
 /data
+/static
 .env.app
 .env.db
