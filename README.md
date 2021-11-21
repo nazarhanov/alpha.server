@@ -3,7 +3,7 @@
 ### Build & Run
 
 ```sh
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 ### Stop & Remove
