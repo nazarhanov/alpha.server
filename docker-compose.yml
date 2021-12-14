@@ -17,7 +17,7 @@ services:
   # - application container
   # -----------------------
   app:
-    build: ghcr.io/nazarhanov/alpha:latest
+    image: ghcr.io/nazarhanov/alpha:latest
     command: >
       sh -c "python3 manage.py collectstatic --noinput &&
              python3 manage.py migrate &&
