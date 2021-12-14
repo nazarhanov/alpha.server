@@ -17,8 +17,11 @@ services:
   # - application container
   # -----------------------
   app:
-    build: ./app
-    env_file: ./app/.env.app
+    build: ghcr.io/nazarhanov/alpha:latest
+    command: >
+      sh -c "python3 manage.py collectstatic --noinput &&
+             python3 manage.py migrate &&
+             gunicorn alpha.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - ./static:/app/static
     depends_on:
